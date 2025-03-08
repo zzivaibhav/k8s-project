@@ -73,6 +73,11 @@ app.post('/calculate-sum', express.json(), (req, res) => {
         });
 });
 
+app.get('/', (req, res) => {
+    res.send('Welcome to the CSV Sum Service!');
+}   
+);
+
 app.listen(PORT, () => {
     console.log(`CSV Sum Service listening on port ${PORT}`);
 });
