@@ -33,7 +33,7 @@ spec:
     - protocol: TCP
       port: 4000
       targetPort: 3000
-      nodePort: 35000
+      nodePort: 30000
        
   selector:
     app: micro-service-one
