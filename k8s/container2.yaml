@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: container2
-        image: us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1:latest
+        image: us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app2:latest
         env:
         - name: PORT
           value: "3001"
