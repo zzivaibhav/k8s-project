@@ -1,5 +1,5 @@
 # Use the official Node.js image
-FROM --platform=$BUILDPLATFORM node:18-alpine
+FROM  node:18-alpine
 
 # Set the working directory
 WORKDIR /app
