@@ -1,52 +1,11 @@
-# steps:
-#   # Step 1: Build Docker image
-#   - name: 'gcr.io/cloud-builders/docker'
-#     args: ['build', '-t', 'us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1', './Container1/']
-
-#   # Step 2: Push Docker image to Google Container Registry
-#   - name: 'gcr.io/cloud-builders/docker'
-#     args: ['push', 'us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1:latest']
-
-#   # Step 3: Configure kubectl with the GKE cluster
-#   - name: 'gcr.io/cloud-builders/gcloud'
-#     args:
-#       - 'container'
-#       - 'clusters'
-#       - 'get-credentials'
-#       - 'k8s-assignment'
-#       - '--zone'
-#       - 'us-central1-a'
-#       - '--project'
-#       - 'k8s-assignment-453118'
-#     env:
-#       - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
-#       - 'CLOUDSDK_CONTAINER_CLUSTER=k8s-assignment'
-#       - 'KUBECTL_VERSION=1.29'  # Specify a supported kubectl version
-
-#   # Step 4: Apply the k8s deployment
-#   - name: 'gcr.io/cloud-builders/kubectl'
-#     args:
-#       - 'apply'
-#       - '-f'
-#       - 'k8s/container1.yaml'
-#     env:
-#       - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
-#       - 'CLOUDSDK_CONTAINER_CLUSTER=k8s-assignment'
-
-  
-
-# options:
-#   logging: CLOUD_LOGGING_ONLY
-
-
 steps:
-  # Step 1: Build Docker image with a unique tag
+  # Step 1: Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1:${SHORT_SHA}', './Container1/']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1', './Container1/']
 
   # Step 2: Push Docker image to Google Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1:${SHORT_SHA}']
+    args: ['push', 'us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1:latest']
 
   # Step 3: Configure kubectl with the GKE cluster
   - name: 'gcr.io/cloud-builders/gcloud'
@@ -62,17 +21,9 @@ steps:
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=k8s-assignment'
-      - 'KUBECTL_VERSION=1.29'
+      - 'KUBECTL_VERSION=1.29'  # Specify a supported kubectl version
 
-  # Step 4: Replace the image tag in the Kubernetes deployment file
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'sed'
-    args:
-      - '-i'
-      - 's|image: us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1:.*|image: us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1:${SHORT_SHA}|'
-      - 'k8s/container1.yaml'
-
-  # Step 5: Apply the updated k8s deployment
+  # Step 4: Apply the k8s deployment
   - name: 'gcr.io/cloud-builders/kubectl'
     args:
       - 'apply'
@@ -82,18 +33,7 @@ steps:
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=k8s-assignment'
 
-  # Step 6: Force rollout restart to ensure new pods get the latest image
-  - name: 'gcr.io/cloud-builders/kubectl'
-    args:
-      - 'rollout'
-      - 'restart'
-      - 'deployment/container1-deployment'
-    env:
-      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
-      - 'CLOUDSDK_CONTAINER_CLUSTER=k8s-assignment'
+  
 
 options:
   logging: CLOUD_LOGGING_ONLY
-
-substitutions:
-  SHORT_SHA: ${SHORT_SHA}
