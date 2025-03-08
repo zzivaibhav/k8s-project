@@ -11,6 +11,7 @@ const PORT = process.env.PORT;
 // Middleware to parse incoming JSON
 app.use(express.json());
 
+
 // Endpoint to receive input and forward it to the second container
 app.post('/calculate', (req, res) => {
     const { file, product } = req.body;
@@ -45,7 +46,9 @@ app.post('/calculate', (req, res) => {
             }
         });
 });
-
+app.get('/', (req, res) => {
+    res.send('Welcome to the first container!');
+});
 // Start the server
 app.listen(PORT, () => {
     console.log(`App container listening on port ${PORT}`);
