@@ -1,0 +1,104 @@
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment
+  labels:
+    app: app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+      - name: app
+        image: vaibhav1476/app1:latest
+        ports:
+        - containerPort: 6000
+        volumeMounts:
+        - mountPath: /app/files
+          name: app-files
+      volumes:
+      - name: app-files
+        hostPath:
+          path: /app/files
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: csv-sum-service-deployment
+  labels:
+    app: csv-sum-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: csv-sum-service
+  template:
+    metadata:
+      labels:
+        app: csv-sum-service
+    spec:
+      containers:
+      - name: csv-sum-service
+        image: vaibhav1476/app2:latest
+        ports:
+        - containerPort: 3001
+        volumeMounts:
+        - mountPath: /app/files
+          name: app-files
+      volumes:
+      - name: app-files
+        hostPath:
+          path: /app/files
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+spec:
+  selector:
+    app: app
+  ports:
+    - protocol: TCP
+      port: 6000
+      targetPort: 6000
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: csv-sum-service
+spec:
+  selector:
+    app: csv-sum-service
+  ports:
+    - protocol: TCP
+      port: 3001
+      targetPort: 3001
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: internal-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: app
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: csv-sum-service
+      ports:
+      - protocol: TCP
+        port: 3001

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: container2-deployment
+   
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-service-two
+  template:
+    metadata:
+      labels:
+        app: micro-service-two
+    spec:
+      containers:
+      - name: container2
+        image: vaibhav1476/app2:latest
+        env:
+        - name: PORT
+          value: "3001"
+        ports:
+        - containerPort: 3001
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: container1-service
+spec:
+  ports:
+    - protocol: TCP
+      port: 4001
+      targetPort: 3001
+      nodePort: 30006
+  selector:
+    app: micro-service-one
+  type: NodePort  # Use ClusterIP for internal access

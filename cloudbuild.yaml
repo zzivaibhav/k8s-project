@@ -1,0 +1,40 @@
+steps:
+  # Step 1: Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1', './Container1/']
+
+  # Step 2: Push Docker image to Google Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+     
+    args: ['push', 'us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1']
+
+  # Step 3: Configure kubectl with the GKE cluster
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args:
+      - 'container'
+      - 'clusters'
+      - 'get-credentials'
+      - 'k8s-assignment'
+      - '--zone'
+      - 'us-central1-a'
+      - '--project'
+      - 'k8s-assignment-453118'
+
+  # Step 4: Apply the k8s deployment
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args:
+      - 'apply'
+      - '-f'
+      - 'k8s/container1.yaml'
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args:
+      - 'apply'
+      - '-f'
+      - 'k8s/container2.yaml'
+
+# Add the required logging configuration
+options:
+  logging: CLOUD_LOGGING_ONLY  # Use Cloud Logging only
+# OR
+# logs_bucket: 'gs://your-logs-bucket-name'  # Specify a GCS bucket for logs

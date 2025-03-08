@@ -1,0 +1,27 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  GCP_PROJECT_ID: "k8s-assignment-453020"
+  GKE_CLUSTER: "k8s-assignment"
+  GKE_ZONE: "us-central1-c"
+  #location of the artifact repository
+  ARTIFACT_REPO: "us-central1-docker.pkg.dev/k8s-assignment-453020/microservices-repo"
+
+before_script:
+  - echo $GCLOUD_SERVICE_KEY | base64 -d > gcloud-service-key.json
+  - gcloud auth activate-service-account --key-file=gcloud-service-key.json
+  - gcloud config set project $GCP_PROJECT_ID
+  - gcloud auth configure-docker us-central1-docker.pkg.dev
+
+build:
+  stage: build
+  script:
+    - docker build -t $ARTIFACT_REPO/microservice-1:$CI_COMMIT_SHA .
+    - docker push $ARTIFACT_REPO/microservice-1:$CI_COMMIT_SHA
+
+deploy:
+  stage: deploy
+  script:
+    - gcloud builds submit --config ci-cd/cloudbuild.yaml
