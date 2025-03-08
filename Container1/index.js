@@ -11,6 +11,7 @@ const PORT = process.env.PORT;
 // Middleware to parse incoming JSON
 app.use(express.json());
 
+//demo
 
 // Endpoint to receive input and forward it to the second container
 app.post('/calculate', (req, res) => {
