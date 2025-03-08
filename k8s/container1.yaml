@@ -32,7 +32,7 @@ spec:
     - protocol: TCP
       port: 4000
       targetPort: 3000
-      nodePort: 30005
+       
   selector:
     app: micro-service-one
   type: LoadBalancer
