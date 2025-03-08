@@ -7,7 +7,7 @@ steps:
   # Step 2: Push Docker image to Google Container Registry
   - name: 'gcr.io/cloud-builders/docker'
      
-    args: ['push', 'us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1']
+    args: ['push', 'us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1:latest']
 
   # Step 3: Configure kubectl with the GKE cluster
   - name: 'gcr.io/cloud-builders/kubectl'
