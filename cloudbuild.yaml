@@ -1,12 +1,10 @@
 steps:
   # Step 1: Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    
     args: ['build', '-t', 'us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1', './Container1/']
 
   # Step 2: Push Docker image to Google Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-     
     args: ['push', 'us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1:latest']
 
   # Step 3: Configure kubectl with the GKE cluster
@@ -20,6 +18,10 @@ steps:
       - 'us-central1-a'
       - '--project'
       - 'k8s-assignment-453118'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=k8s-assignment'
+      - 'KUBECTL_VERSION=1.29'  # Specify a supported kubectl version
 
   # Step 4: Apply the k8s deployment
   - name: 'gcr.io/cloud-builders/kubectl'
@@ -27,14 +29,18 @@ steps:
       - 'apply'
       - '-f'
       - 'k8s/container1.yaml'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=k8s-assignment'
+
   - name: 'gcr.io/cloud-builders/kubectl'
     args:
       - 'apply'
       - '-f'
       - 'k8s/container2.yaml'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=k8s-assignment'
 
-# Add the required logging configuration
 options:
-  logging: CLOUD_LOGGING_ONLY  # Use Cloud Logging only
-# OR
-# logs_bucket: 'gs://your-logs-bucket-name'  # Specify a GCS bucket for logs
+  logging: CLOUD_LOGGING_ONLY
