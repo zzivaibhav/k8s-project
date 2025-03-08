@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: container2
-        image: vaibhav1476/app2:latest
+        image: us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1:latest
         env:
         - name: PORT
           value: "3001"
@@ -35,4 +35,4 @@ spec:
       nodePort: 30006
   selector:
     app: micro-service-one
-  type: NodePort  # Use ClusterIP for internal access
+  type: LoadBalancer  # Use ClusterIP for internal access
