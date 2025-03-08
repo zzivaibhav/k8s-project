@@ -31,9 +31,9 @@ metadata:
 spec:
   ports:
     - protocol: TCP
-      nodePort: 35000
       port: 4000
       targetPort: 3000
+      nodePort: 35000
        
   selector:
     app: micro-service-one
