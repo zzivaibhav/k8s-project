@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
       - name: container1
-        image: us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1:latest
+        image: us-central1-docker.pkg.dev/k8s-assignment-453118/micro-services/app1:${SHORT_SHA}
+        imagePullPolicy: Always 
         env:
         - name: PORT
           value: "3000"
