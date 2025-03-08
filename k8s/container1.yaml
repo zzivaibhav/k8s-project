@@ -35,4 +35,4 @@ spec:
       nodePort: 30005
   selector:
     app: micro-service-one
-  type: NodePort  # Use ClusterIP for internal access
+  type: LoadBalancer
